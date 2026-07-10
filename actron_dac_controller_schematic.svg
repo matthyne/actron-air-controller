@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Actron wired-line replacement: DAC driver schematic</title>
+<desc>Schematic showing an ESP32 connected via an I2C level shifter to an MCP4725 DAC, whose output goes through a series resistor and TVS clamp into the Actron indoor unit's Y (signal) and E (ground) pins, alongside the indoor board's internal pull-up resistor and ADC input.</desc>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #1a1a1a; }
+  .sec { fill: #666666; }
+  .acc { fill: #b5541a; }
+  .box { fill: #f2f2f2; stroke: #333333; stroke-width: 2; }
+  .wire { stroke: #1a1a1a; stroke-width: 1.6; fill: none; }
+  .dashwire { stroke: #666666; stroke-width: 1.4; fill: none; stroke-dasharray: 4,3; }
+  .pinlabel { font-size: 10px; }
+  .complabel { font-size: 12px; font-weight: 600; }
+  .sublabel { font-size: 10px; }
+  .note { font-size: 11px; }
+</style>
+
+<rect x="0" y="0" width="1000" height="640" fill="#ffffff"/>
+
+<text x="500" y="32" text-anchor="middle" font-size="19" font-weight="700">Actron wired-line replacement — DAC driver schematic</text>
+
+<!-- Outer: new controller -->
+<rect x="30" y="95" width="705" height="460" rx="10" fill="none" stroke="#b5541a" stroke-width="2" stroke-dasharray="6,4"/>
+<text x="48" y="118" class="complabel acc">NEW ESPHOME CONTROLLER (replaces wired remote)</text>
+
+<!-- Outer: indoor board -->
+<rect x="760" y="95" width="210" height="460" rx="10" fill="none" stroke="#333333" stroke-width="2" stroke-dasharray="4,4"/>
+<text x="770" y="118" class="complabel sec">INDOOR UNIT BOARD</text>
+<text x="770" y="132" class="sublabel sec">(existing — internals per your measurements)</text>
+
+<!-- 5V rail -->
+<line x1="300" y1="205" x2="560" y2="205" class="wire"/>
+<text x="305" y="198" class="pinlabel">5V (matches board Vcc — see note)</text>
+<line x1="370" y1="205" x2="370" y2="300" class="wire"/>
+<line x1="500" y1="205" x2="500" y2="300" class="wire"/>
+
+<!-- optional tap dashed path from indoor board 12V/5V pin back to our 5V rail -->
+<path d="M 760 150 L 610 150 L 610 205" class="dashwire"/>
+<circle cx="760" cy="150" r="4" fill="#666666"/>
+<text x="600" y="143" text-anchor="end" class="note sec">optional: tap board's 5V pin (best — makes DAC VDD = Vcc exactly)</text>
+
+<!-- ESP32 box -->
+<rect x="55" y="300" width="120" height="110" rx="6" class="box"/>
+<text x="115" y="330" text-anchor="middle" class="complabel">ESP32 /</text>
+<text x="115" y="345" text-anchor="middle" class="complabel">ESP8266</text>
+<text x="115" y="359" text-anchor="middle" class="sublabel sec">(existing)</text>
+
+<!-- ESP pins -->
+<line x1="175" y1="325" x2="240" y2="325" class="wire"/>
+<text x="180" y="320" class="pinlabel">SDA</text>
+<line x1="175" y1="350" x2="240" y2="350" class="wire"/>
+<text x="180" y="345" class="pinlabel">SCL</text>
+<line x1="175" y1="375" x2="240" y2="375" class="wire"/>
+<text x="180" y="370" class="pinlabel">GND</text>
+<line x1="175" y1="400" x2="240" y2="400" class="wire"/>
+<text x="180" y="395" class="pinlabel">3V3</text>
+
+<!-- Level shifter box -->
+<rect x="240" y="300" width="130" height="110" rx="6" class="box"/>
+<text x="305" y="325" text-anchor="middle" class="complabel">I2C Level</text>
+<text x="305" y="339" text-anchor="middle" class="complabel">Shifter</text>
+<text x="305" y="353" text-anchor="middle" class="sublabel sec">(TXS0102 or similar)</text>
+<text x="260" y="367" class="sublabel sec">LV 3.3V</text>
+<text x="325" y="367" class="sublabel sec" text-anchor="end">HV 5V</text>
+
+<!-- Level shifter -> MCP4725 -->
+<line x1="370" y1="325" x2="440" y2="325" class="wire"/>
+<text x="378" y="320" class="pinlabel">SDA</text>
+<line x1="370" y1="350" x2="440" y2="350" class="wire"/>
+<text x="378" y="345" class="pinlabel">SCL</text>
+<line x1="370" y1="375" x2="440" y2="375" class="wire"/>
+<text x="378" y="370" class="pinlabel">GND</text>
+
+<!-- MCP4725 box -->
+<rect x="440" y="300" width="120" height="110" rx="6" class="box"/>
+<text x="500" y="330" text-anchor="middle" class="complabel">MCP4725</text>
+<text x="500" y="344" text-anchor="middle" class="sublabel sec">12-bit I2C DAC</text>
+<text x="505" y="298" class="pinlabel">VDD</text>
+
+<!-- MCP4725 VOUT to series resistor to connector -->
+<line x1="560" y1="350" x2="605" y2="350" class="wire"/>
+<text x="565" y="345" class="pinlabel">VOUT</text>
+<path d="M 605 350 l 8 -10 l 8 20 l 8 -20 l 8 20 l 8 -20 l 8 10" class="wire"/>
+<text x="618" y="336" text-anchor="middle" class="note">220–330Ω</text>
+<line x1="661" y1="350" x2="700" y2="350" class="wire"/>
+
+<!-- TVS clamp to ground -->
+<line x1="680" y1="350" x2="680" y2="380" class="wire"/>
+<path d="M 671 380 h 18 M 671 380 l 9 14 l 9 -14" class="wire"/>
+<line x1="680" y1="394" x2="680" y2="520" class="wire"/>
+<text x="694" y="392" class="note sec">TVS / Zener</text>
+<text x="694" y="405" class="note sec">(protection)</text>
+
+<!-- Connector pin Y -->
+<line x1="700" y1="350" x2="760" y2="350" class="wire"/>
+<circle cx="735" cy="350" r="5" fill="#b5541a"/>
+<text x="735" y="335" text-anchor="middle" class="complabel acc">Y</text>
+
+<!-- Indoor board internals -->
+<line x1="820" y1="150" x2="900" y2="150" class="wire"/>
+<text x="822" y="143" class="sublabel sec">Vcc ≈ 5V (assumed pull-up rail)</text>
+<line x1="860" y1="150" x2="860" y2="220" class="wire"/>
+<path d="M 852 220 l 16 0 M 852 220 l 8 -8 M 852 234 l 16 0 M 852 234 l 8 8 M 852 248 l 16 0" class="wire"/>
+<text x="875" y="235" class="note sec">R_pullup</text>
+<text x="875" y="248" class="note sec">(unknown — measure)</text>
+<line x1="860" y1="255" x2="860" y2="350" class="wire"/>
+<line x1="860" y1="350" x2="760" y2="350" class="wire"/>
+<circle cx="860" cy="350" r="4" fill="#1a1a1a"/>
+
+<!-- ADC box -->
+<rect x="805" y="410" width="115" height="55" rx="6" class="box"/>
+<text x="862" y="433" text-anchor="middle" class="sublabel">ADC input</text>
+<text x="862" y="447" text-anchor="middle" class="sublabel sec">(button decoder)</text>
+<line x1="860" y1="350" x2="860" y2="410" class="wire"/>
+
+<!-- Ground rail -->
+<line x1="55" y1="520" x2="920" y2="520" class="wire"/>
+<line x1="115" y1="410" x2="115" y2="520" class="wire"/>
+<line x1="305" y1="410" x2="305" y2="520" class="wire"/>
+<line x1="500" y1="410" x2="500" y2="520" class="wire"/>
+<line x1="862" y1="465" x2="862" y2="520" class="wire"/>
+<line x1="760" y1="500" x2="760" y2="520" class="wire"/>
+<text x="400" y="536" text-anchor="middle" class="sublabel sec">common ground — GND / board's "E" pin</text>
+
+<!-- ground symbols -->
+<g transform="translate(115,520)">
+  <line x1="0" y1="0" x2="0" y2="10" class="wire"/>
+  <line x1="-10" y1="10" x2="10" y2="10" class="wire"/>
+  <line x1="-6" y1="15" x2="6" y2="15" class="wire"/>
+  <line x1="-2" y1="20" x2="2" y2="20" class="wire"/>
+</g>
+<g transform="translate(760,520)">
+  <line x1="0" y1="0" x2="0" y2="10" class="wire"/>
+  <line x1="-10" y1="10" x2="10" y2="10" class="wire"/>
+  <line x1="-6" y1="15" x2="6" y2="15" class="wire"/>
+  <line x1="-2" y1="20" x2="2" y2="20" class="wire"/>
+</g>
+<text x="735" y="365" text-anchor="middle" class="pinlabel acc">connector</text>
+<text x="760" y="512" text-anchor="middle" class="pinlabel">E</text>
+
+<!-- Legend -->
+<line x1="30" y1="565" x2="970" y2="565" stroke="#333333" stroke-width="1"/>
+<text x="30" y="585" class="note sec">Rest state (no button): DAC holds ~4.982V (IDLE), matching the board's natural pull-up voltage.</text>
+<text x="30" y="602" class="note sec">Button press: DAC pulses to the target voltage for ~300ms, then returns to IDLE — see the voltage table in the design doc.</text>
+<text x="30" y="619" class="note sec">Confirm real Vcc and R_pullup with a multimeter before finalizing the series resistor and TVS/Zener ratings — see §7 of the design doc.</text>
+</svg>

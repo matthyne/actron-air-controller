@@ -1,0 +1,113 @@
+<svg viewBox="0 0 1100 660" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Shared KEY-line bus with three coexisting controllers</title>
+<desc>Topology diagram showing the indoor unit board, two existing OEM wired controllers, and the new ESPHome controller all tapped onto the same 3-wire PWR/KEY/GND bus. Each controller has its own ADC listening on KEY at all times; the new controller additionally gates its DAC output through a relay so it only drives the line during a press.</desc>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #1a1a1a; }
+  .sec { fill: #666666; }
+  .acc { fill: #b5541a; }
+  .box { fill: #f2f2f2; stroke: #333333; stroke-width: 2; }
+  .accbox { fill: #f2f2f2; stroke: #b5541a; stroke-width: 2.2; }
+  .wire { stroke: #1a1a1a; stroke-width: 1.6; fill: none; }
+  .buswire { stroke: #1a1a1a; stroke-width: 2; fill: none; }
+  .pinlabel { font-size: 10px; }
+  .complabel { font-size: 12px; font-weight: 600; }
+  .sublabel { font-size: 10.5px; }
+  .note { font-size: 11px; }
+</style>
+
+<rect x="0" y="0" width="1100" height="660" fill="#ffffff"/>
+
+<text x="550" y="30" text-anchor="middle" font-size="19" font-weight="700">Shared KEY-line bus — three-node coexistence</text>
+<text x="550" y="50" text-anchor="middle" font-size="12" class="sec">Every node listens all the time; only one drives KEY at a time</text>
+
+<!-- Bus lines -->
+<line x1="80" y1="120" x2="1050" y2="120" class="buswire"/>
+<line x1="80" y1="155" x2="1050" y2="155" class="buswire"/>
+<line x1="80" y1="190" x2="1050" y2="190" class="buswire"/>
+<text x="40" y="124" text-anchor="end" class="pinlabel">PWR</text>
+<text x="40" y="159" text-anchor="end" class="pinlabel acc">KEY</text>
+<text x="40" y="194" text-anchor="end" class="pinlabel">GND</text>
+
+<!-- Indoor unit node -->
+<g>
+  <line x1="160" y1="120" x2="160" y2="240" class="wire"/>
+  <line x1="160" y1="155" x2="160" y2="240" class="wire"/>
+  <line x1="160" y1="190" x2="160" y2="240" class="wire"/>
+  <rect x="80" y="240" width="180" height="160" rx="8" class="box" stroke-dasharray="4,4"/>
+  <text x="170" y="228" text-anchor="middle" class="complabel sec">Indoor Unit Board</text>
+  <text x="100" y="265" class="sublabel sec">Vcc pull-up (~5V)</text>
+  <text x="100" y="282" class="sublabel sec">→ R_pullup (unknown)</text>
+  <text x="100" y="299" class="sublabel sec">→ ADC (button decoder)</text>
+  <text x="100" y="325" class="note sec">Sets the resting IDLE</text>
+  <text x="100" y="340" class="note sec">voltage via its own</text>
+  <text x="100" y="355" class="note sec">pull-up — never drives</text>
+  <text x="100" y="370" class="note sec">a button code itself.</text>
+</g>
+
+<!-- OEM Controller 1 -->
+<g>
+  <line x1="380" y1="120" x2="380" y2="240" class="wire"/>
+  <line x1="380" y1="155" x2="380" y2="240" class="wire"/>
+  <line x1="380" y1="190" x2="380" y2="240" class="wire"/>
+  <rect x="300" y="240" width="160" height="150" rx="8" class="box" stroke-dasharray="4,4"/>
+  <text x="380" y="228" text-anchor="middle" class="complabel sec">Wired Controller 1</text>
+  <text x="380" y="253" text-anchor="middle" class="sublabel sec">(existing)</text>
+  <text x="315" y="278" class="sublabel sec">Button matrix</text>
+  <text x="315" y="292" class="sublabel sec">(resistor ladder)</text>
+  <text x="315" y="315" class="sublabel sec">Own ADC —</text>
+  <text x="315" y="329" class="sublabel sec">listens on KEY</text>
+  <text x="315" y="360" class="note sec">Presses drive KEY;</text>
+  <text x="315" y="374" class="note sec">its ADC hears itself</text>
+  <text x="315" y="388" class="note sec">+ the other two nodes.</text>
+</g>
+
+<!-- OEM Controller 2 -->
+<g>
+  <line x1="600" y1="120" x2="600" y2="240" class="wire"/>
+  <line x1="600" y1="155" x2="600" y2="240" class="wire"/>
+  <line x1="600" y1="190" x2="600" y2="240" class="wire"/>
+  <rect x="520" y="240" width="160" height="150" rx="8" class="box" stroke-dasharray="4,4"/>
+  <text x="600" y="228" text-anchor="middle" class="complabel sec">Wired Controller 2</text>
+  <text x="600" y="253" text-anchor="middle" class="sublabel sec">(existing)</text>
+  <text x="535" y="278" class="sublabel sec">Button matrix</text>
+  <text x="535" y="292" class="sublabel sec">(resistor ladder)</text>
+  <text x="535" y="315" class="sublabel sec">Own ADC —</text>
+  <text x="535" y="329" class="sublabel sec">listens on KEY</text>
+  <text x="535" y="360" class="note sec">Identical role — Actron's</text>
+  <text x="535" y="374" class="note sec">manual calls this a</text>
+  <text x="535" y="388" class="note sec">"main/secondary" pair.</text>
+</g>
+
+<!-- New ESPHome controller -->
+<g>
+  <line x1="900" y1="120" x2="900" y2="240" class="wire"/>
+  <line x1="960" y1="190" x2="960" y2="240" class="wire"/>
+  <rect x="760" y="240" width="290" height="200" rx="8" class="accbox" stroke-dasharray="6,4"/>
+  <text x="905" y="228" text-anchor="middle" class="complabel acc">New ESPHome Controller (yours)</text>
+
+  <!-- transmit path -->
+  <rect x="780" y="258" width="250" height="34" rx="5" class="box"/>
+  <text x="905" y="278" text-anchor="middle" class="sublabel">ESP32 → level shifter → MCP4725 DAC</text>
+
+  <!-- relay gate, KEY line switched -->
+  <line x1="900" y1="155" x2="900" y2="292" class="wire" stroke-dasharray="0"/>
+  <path d="M 890 315 h 20 M 890 315 l 10 -10 M 900 315 l 10 10" class="wire"/>
+  <rect x="780" y="302" width="250" height="30" rx="5" class="box"/>
+  <text x="905" y="322" text-anchor="middle" class="sublabel">relay (open by default) + 220–330Ω + TVS</text>
+
+  <!-- listen path -->
+  <rect x="780" y="344" width="250" height="34" rx="5" class="box"/>
+  <text x="905" y="358" text-anchor="middle" class="sublabel">100k/180k divider → ESP32 ADC</text>
+  <text x="905" y="372" text-anchor="middle" class="sublabel">(reads true bus voltage, always)</text>
+
+  <text x="780" y="400" class="note acc">Listens continuously.</text>
+  <text x="780" y="415" class="note acc">Drives only ~300ms per press,</text>
+  <text x="780" y="429" class="note acc">and only after confirming KEY = IDLE.</text>
+</g>
+
+<!-- legend -->
+<line x1="80" y1="470" x2="1050" y2="470" stroke="#333333" stroke-width="1"/>
+<text x="80" y="492" class="note sec">Any node pressing a button broadcasts its voltage to the other three — that's the entire "sync" mechanism (§3a in the design doc), no separate feedback wire required.</text>
+<text x="80" y="510" class="note sec">The new controller must behave the same way as the two OEM units: listen always, transmit briefly, never hold the line — otherwise it drowns out their button presses.</text>
+<text x="80" y="528" class="note sec">Open question: whether collisions are avoided by carrier-sense (check-before-transmit) in the OEM firmware, or simply tolerated as rare — unconfirmed, see design doc §9.</text>
+</svg>
