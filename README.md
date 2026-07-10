@@ -9,7 +9,7 @@ Voltage Levels measured from actual controller
 |UP	|2.234	|0.296|
 |DOWN	|2.53	|0.342|
 |Temp Down	|2.872	|0.348|
-|FAN	|3.22	|0.430|
+|FAN ??	|3.22	|0.430|
 |Zone 1	|3.65	|0.225|
 |Zone 3	|3.875	|0.362|
 |Zone 2	|4.237	|0.444|
